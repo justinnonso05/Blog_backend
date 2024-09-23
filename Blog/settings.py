@@ -46,7 +46,7 @@ SECRET_KEY = 'django-insecure-lg8=-sz27ko7!f@lv+x-z8)lzro3tq1j!7r=aw$3pobqstk1ta
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://9e05-102-88-71-128.ngrok-free.app"]
+CSRF_TRUSTED_ORIGINS = ["https://blog-backend-wxhe.onrender.com"]
 
 
 # Application definition

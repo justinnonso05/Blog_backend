@@ -1,0 +1,11 @@
+django
+django-unfold
+django-summernote
+pillow
+djangorestframework
+cloudinary
+django-cloudinary-storage
+beautifulsoup4
+django-froala-editor
+django-quill-editor
+django-cors-headers

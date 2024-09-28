@@ -1,23 +1,37 @@
-from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from .models import Blog
-from .serializers import BlogSerializer
-from cloudinary.uploader import upload
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from .serializers import BlogSerializer, PaginatedBlogSerializer
+
+class CustomPagination(PageNumberPagination):
+    page_size = 10
+
+    def get_paginated_response(self, data):
+        return Response({
+            'totalPosts': self.page.paginator.count,
+            'totalPages': self.page.paginator.num_pages,
+            'currentPage': self.page.number,
+            'posts': data
+        })
+
+class BlogListCreateView(APIView):
+    def get(self, request):
+        paginator = CustomPagination()
+        queryset = Blog.objects.all()
+        page = paginator.paginate_queryset(queryset, request)
+        serializer = BlogSerializer(page, many=True)
+        paginated_serializer = PaginatedBlogSerializer({
+            'totalPosts': paginator.page.paginator.count,
+            'totalPages': paginator.page.paginator.num_pages,
+            'currentPage': paginator.page.number,
+            'posts': serializer.data
+        })
+        return Response(paginated_serializer.data)
 
 
-class BlogListCreateView(generics.ListCreateAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-
-class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Blog.objects.all()
-    serializer_class = BlogSerializer
-
-
-
-@csrf_exempt
-def upload_image(request):
+# @csrf_exempt
+# def upload_image(request):
     ...
     # if request.method == 'POST' and request.FILES:
     #     file = request.FILES['file']

@@ -22,7 +22,11 @@ class CustomPagination(PageNumberPagination):
 class BlogListCreateView(APIView):
     def get(self, request):
         paginator = CustomPagination()
+        search_query = request.query_params.get('query', None)
         queryset = Blog.objects.all().order_by('-date_posted')
+        if search_query:
+            queryset = queryset.filter(title__icontains=search_query)
+
         page = paginator.paginate_queryset(queryset, request)
         serializer = BlogSerializer(page, many=True)
         paginated_serializer = PaginatedBlogSerializer({

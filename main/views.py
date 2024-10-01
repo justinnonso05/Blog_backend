@@ -6,7 +6,7 @@ from .serializers import BlogSerializer, PaginatedBlogSerializer
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
-    page_size_query_param = 'page'
+    page_size_query_param = 'limit'
 
 
     def get_paginated_response(self, data):

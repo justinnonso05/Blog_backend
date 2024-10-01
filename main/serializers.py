@@ -25,7 +25,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['id', 'title', 'category', 'title_image', 'content', 'author', 'date_posted']
+        fields = ['id', 'title', 'slug', 'category', 'title_image', 'content', 'author', 'date_posted']
 
 class PaginatedBlogSerializer(serializers.Serializer):
     totalPosts = serializers.IntegerField()

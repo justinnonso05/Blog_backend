@@ -6,6 +6,8 @@ from .serializers import BlogSerializer, PaginatedBlogSerializer
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
+    page_size_query_param = 'page'
+
 
     def get_paginated_response(self, data):
         return Response({
@@ -29,17 +31,3 @@ class BlogListCreateView(APIView):
         })
         return Response(paginated_serializer.data)
 
-
-# @csrf_exempt
-# def upload_image(request):
-    ...
-    # if request.method == 'POST' and request.FILES:
-    #     file = request.FILES['file']
-    #     result = upload(file, folder="Blog/content/")  # Upload directly to Cloudinary
-    #     image_url = result.get('url')  # Get the Cloudinary URL
-
-    #     return JsonResponse({
-    #         'url': image_url,
-    #         'name': file.name
-    #     })
-    # return JsonResponse({'error': 'Invalid request'}, status=400)

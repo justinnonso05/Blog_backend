@@ -1,7 +1,9 @@
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from .models import Blog
+from rest_framework import status
 from .serializers import BlogSerializer, PaginatedBlogSerializer
 
 class CustomPagination(PageNumberPagination):
@@ -31,3 +33,16 @@ class BlogListCreateView(APIView):
         })
         return Response(paginated_serializer.data)
 
+
+class BlogDetailView(APIView):
+    def get(self, request):
+        slug = request.query_params.get('slug')  # Get the slug from the query parameters
+        if slug:
+            try:
+                blog = Blog.objects.get(slug=slug)
+                serializer = BlogSerializer(blog)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Blog.DoesNotExist:
+                return Response({'error': 'Blog post not found'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response({'error': 'Slug parameter is required'}, status=status.HTTP_400_BAD_REQUEST)

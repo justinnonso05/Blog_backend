@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from .models import Blog
+from django.db.models import Q
 from rest_framework import status
 from .serializers import BlogSerializer, PaginatedBlogSerializer
 
@@ -25,7 +26,7 @@ class BlogListCreateView(APIView):
         search_query = request.query_params.get('query', None)
         queryset = Blog.objects.all().order_by('-date_posted')
         if search_query:
-            queryset = queryset.filter(title__icontains=search_query)
+            queryset = queryset.filter(Q(title__icontains = search_query.lower()) | Q(category__icontains = search_query.upper()))
 
         page = paginator.paginate_queryset(queryset, request)
         serializer = BlogSerializer(page, many=True)

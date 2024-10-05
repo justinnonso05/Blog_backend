@@ -10,3 +10,4 @@ django-froala-editor
 django-quill-editor
 django-cors-headers
 gunicorn
+whitenoise

@@ -2,10 +2,10 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from .models import Blog
+from .models import Blog, Comment
 from django.db.models import Q
-from rest_framework import status
-from .serializers import BlogSerializer, PaginatedBlogSerializer
+from rest_framework import status, generics
+from .serializers import BlogSerializer, PaginatedBlogSerializer, CommentSerializer
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
@@ -51,3 +51,8 @@ class BlogDetailView(APIView):
                 return Response({'error': 'Blog post not found'}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({'error': 'Slug parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class CommentListView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Blog
+from .models import Blog, Comment
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +32,8 @@ class PaginatedBlogSerializer(serializers.Serializer):
     totalPages = serializers.IntegerField()
     currentPage = serializers.IntegerField()
     posts = BlogSerializer(many=True)
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'name', 'content', 'date_posted']

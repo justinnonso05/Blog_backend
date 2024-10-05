@@ -41,3 +41,12 @@ class Blog(models.Model):
             unique_slug = f'{slug}-{num}'
             num += 1
         return unique_slug
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    content = models.TextField(blank=False)
+    date_posted = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.content[:10]

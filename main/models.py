@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
+from cloudinary.api import cloudinary
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 # from django_summernote.fields import SummernoteTextField
 # from django_summernote.fields import SummernoteTextField
 
@@ -31,7 +35,28 @@ class Blog(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self.generate_unique_slug()
+        
+        # Convert title image to WebP before uploading to Cloudinary
+        if self.title_image:
+            self.title_image = self.convert_image_to_webp(self.title_image)
+            
         super().save(*args, **kwargs)
+
+    def convert_image_to_webp(self, image_field):
+        # Open the image using Pillow
+        img = Image.open(image_field)
+        
+        # Convert to WebP format
+        img_io = BytesIO()  # Create an in-memory bytes buffer
+        img.save(img_io, format="WEBP", quality=90)  # Save image to buffer as WebP
+        
+        # Prepare the file for Cloudinary upload
+        img_io.seek(0)  # Go to the beginning of the buffer
+        content = ContentFile(img_io.read(), name=f"{self.slug}.webp")  # Use slug for naming
+        
+        # Upload the WebP image to Cloudinary
+        upload_result = cloudinary.uploader.upload(content, folder="Blog/title/")
+        return upload_result['url']  # Return the URL of the uploaded WebP image
 
     def generate_unique_slug(self):
         slug = slugify(self.title)

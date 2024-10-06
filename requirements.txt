@@ -12,3 +12,4 @@ django-cors-headers
 django-tinymce
 gunicorn
 whitenoise
+pillow

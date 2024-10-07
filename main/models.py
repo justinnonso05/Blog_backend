@@ -48,7 +48,7 @@ class Blog(models.Model):
         
         # Convert to WebP format
         img_io = BytesIO()  # Create an in-memory bytes buffer
-        img.save(img_io, format="WEBP", quality=60)  # Save image to buffer as WebP
+        img.save(img_io, format="WEBP", quality=20)  # Save image to buffer as WebP
         
         # Prepare the file for Cloudinary upload
         img_io.seek(0)  # Go to the beginning of the buffer

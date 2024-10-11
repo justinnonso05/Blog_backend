@@ -16,6 +16,7 @@ class Blog(models.Model):
         ('tech', 'Tech'),
         ('lifestyle', 'Lifestyle'),
         ('education', 'Education'),
+        ('health', 'Health'),
         # Add more categories as needed
     ]
 
@@ -37,14 +38,14 @@ class Blog(models.Model):
             self.slug = self.generate_unique_slug()
         
         # Convert title image to WebP before uploading to Cloudinary
-        if self.title_image:
+        if self.title_image and hasattr(self.title_image, 'file'):
             self.title_image = self.convert_image_to_webp(self.title_image)
 
         super().save(*args, **kwargs)
 
     def convert_image_to_webp(self, image_field):
         # Open the image using Pillow
-        img = Image.open(image_field)
+        img = Image.open(image_field.file)
         
         # Convert to WebP format
         img_io = BytesIO()  # Create an in-memory bytes buffer
@@ -55,8 +56,8 @@ class Blog(models.Model):
         content = ContentFile(img_io.read(), name=f"{self.slug}.webp")  # Use slug for naming
         
         # Upload the WebP image to Cloudinary
-        upload_result = cloudinary.uploader.upload(content, folder="Blog/title/")
-        return upload_result['url']  # Return the URL of the uploaded WebP image
+        upload_result = cloudinary.uploader.upload(content, folder="Blog/title/", secure=True)
+        return upload_result['secure_url']  # Return the URL of the uploaded WebP image
 
     def generate_unique_slug(self):
         slug = slugify(self.title)

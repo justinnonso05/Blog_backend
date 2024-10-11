@@ -52,7 +52,86 @@ class BlogDetailView(APIView):
         else:
             return Response({'error': 'Slug parameter is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-class CommentListView(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+# class CommentListView(generics.ListCreateAPIView):
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentSerializer
 
+
+class CommentPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'limit'  # Allow the client to set the limit
+    max_page_size = 100  # Maximum number of comments per page
+
+# class CommentListView(APIView):
+    # def get(self, request):
+    #     blog_id = request.query_params.get('blog_id')
+    #     limit = int(request.query_params.get('limit', 10))  # Default limit is 10
+    #     page = int(request.query_params.get('page', 1))  # Default to first page
+
+    #     if not blog_id:
+    #         return Response({'error': 'blog_id parameter is required'}, status=400)
+
+    #     try:
+    #         blog = Blog.objects.get(id=blog_id)
+    #     except Blog.DoesNotExist:
+    #         return Response({'error': 'Blog not found'}, status=404)
+
+    #     # Get all comments for the blog post
+    #     comments = Comment.objects.filter(post=blog).order_by('-date_posted')
+
+    #     # Get the total number of comments
+    #     total_comments = comments.count()
+
+    #     # Paginate the comments
+    #     paginator = CommentPagination()
+    #     paginator.page_size = limit
+    #     paginated_comments = paginator.paginate_queryset(comments, request)
+
+    #     # Serialize the comments
+    #     serializer = CommentSerializer(paginated_comments, many=True)
+
+    #     # Return paginated response with total comments
+    #     return paginator.get_paginated_response({
+    #         'total_comments': total_comments,
+    #         'comments': serializer.data
+    #     })
+
+
+class CommentListView(APIView):
+    def get(self, request):
+        # Get the blog_id from the query params
+        blog_id = request.query_params.get('blog_id')
+        if not blog_id:
+            return Response({'error': 'blog_id parameter is required'}, status=400)
+
+        # Try to get the corresponding blog
+        blog = get_object_or_404(Blog, id=blog_id)
+
+        # Get all comments for the blog post
+        comments = Comment.objects.filter(post=blog).order_by('-date_posted')
+
+        # Get the total number of comments
+        total_comments = comments.count()
+
+        # Set up pagination
+        paginator = CommentPagination()
+        paginated_comments = paginator.paginate_queryset(comments, request)
+
+        # Serialize the comments
+        serializer = CommentSerializer(paginated_comments, many=True)
+
+        # Format the response data like the image format
+        formatted_comments = [
+            {
+                "name": comment["name"],  # Assuming your CommentSerializer has author_name
+                "comment": comment["content"],  # Assuming CommentSerializer has content field
+                "created_at": comment["date_posted"] # Format the date
+            }
+            for comment in serializer.data
+        ]
+
+        # Return the response without pagination metadata like 'count', 'next', etc.
+        return Response({
+            'totalComments': total_comments,
+            'comments': formatted_comments
+        })

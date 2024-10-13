@@ -12,4 +12,7 @@ django-cors-headers
 django-tinymce
 gunicorn
 whitenoise
+psycopg2
+dj-database-url
 pillow
+tzdata

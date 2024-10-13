@@ -44,7 +44,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-lg8=-sz27ko7!f@lv+x-z8)lzro3tq1j!7r=aw$3pobqstk1ta'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'TRUE') == 'TRUE'
+# DEBUG = os.environ.get('DEBUG', 'TRUE') == 'TRUE'
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://blog-backend-wxhe.onrender.com"]

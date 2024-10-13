@@ -62,39 +62,6 @@ class CommentPagination(PageNumberPagination):
     page_size_query_param = 'limit'  # Allow the client to set the limit
     max_page_size = 100  # Maximum number of comments per page
 
-# class CommentListView(APIView):
-    # def get(self, request):
-    #     blog_id = request.query_params.get('blog_id')
-    #     limit = int(request.query_params.get('limit', 10))  # Default limit is 10
-    #     page = int(request.query_params.get('page', 1))  # Default to first page
-
-    #     if not blog_id:
-    #         return Response({'error': 'blog_id parameter is required'}, status=400)
-
-    #     try:
-    #         blog = Blog.objects.get(id=blog_id)
-    #     except Blog.DoesNotExist:
-    #         return Response({'error': 'Blog not found'}, status=404)
-
-    #     # Get all comments for the blog post
-    #     comments = Comment.objects.filter(post=blog).order_by('-date_posted')
-
-    #     # Get the total number of comments
-    #     total_comments = comments.count()
-
-    #     # Paginate the comments
-    #     paginator = CommentPagination()
-    #     paginator.page_size = limit
-    #     paginated_comments = paginator.paginate_queryset(comments, request)
-
-    #     # Serialize the comments
-    #     serializer = CommentSerializer(paginated_comments, many=True)
-
-    #     # Return paginated response with total comments
-    #     return paginator.get_paginated_response({
-    #         'total_comments': total_comments,
-    #         'comments': serializer.data
-    #     })
 
 
 class CommentListView(APIView):

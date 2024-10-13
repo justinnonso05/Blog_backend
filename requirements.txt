@@ -16,3 +16,4 @@ psycopg2
 dj-database-url
 pillow
 tzdata
+brotli

@@ -22,7 +22,7 @@ class Blog(models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, max_length=255)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     title_image = CloudinaryField('image', folder="Blog/title/", default="https://res.cloudinary.com/dpyxbvcyl/image/upload/v1726002039/Blog/g2dpyp3jmtel9u2kgjvi.jpg")
     # title_image = models.ImageField(upload_to='blog_images/', blank=True, null=True)

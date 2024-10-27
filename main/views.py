@@ -92,7 +92,7 @@ class CommentListView(APIView):
             {
                 "name": comment["name"],  # Assuming your CommentSerializer has author_name
                 "comment": comment["content"],  # Assuming CommentSerializer has content field
-                "created_at": comment["date_posted"] # Format the date
+                "date_posted": comment["date_posted"] # Format the date
             }
             for comment in serializer.data
         ]
@@ -102,3 +102,26 @@ class CommentListView(APIView):
             'totalComments': total_comments,
             'comments': formatted_comments
         })
+    
+    def post(self, request):
+        blog_id = request.query_params.get('blog_id')
+        # Retrieve blog post using blog_id from URL
+        blog = get_object_or_404(Blog, id=blog_id)
+
+        # Extract name and content from the form data
+        name = request.data.get('name')
+        content = request.data.get('content')
+
+        # Validate that name and content are provided
+        if not all([name, content]):
+            return Response({'error': 'name and content are required fields'}, status=400)
+
+        # Create a new comment for the specified blog
+        comment = Comment(post=blog, name=name, content=content)
+        comment.save()
+
+        # Serialize the newly created comment
+        serializer = CommentSerializer(comment)
+
+        # Return the response with serialized data
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -54,7 +54,7 @@ CSRF_TRUSTED_ORIGINS = ["https://blog-backend-wxhe.onrender.com"]
 # Application definition
 
 INSTALLED_APPS = [
-    'main',
+    'main.apps.MainConfig',
     'corsheaders',
     'rest_framework',
     'cloudinary',
@@ -81,10 +81,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# STATICFILES_FINDERS = [
-#     'django.contrib.staticfiles.finders.FileSystemFinder',
-#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-# ]
 
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -158,6 +154,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ifepolitika@gmail.com'
+EMAIL_HOST_PASSWORD = 'ecbh jnhz qthn zhja'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Lumen Blog <Ifepolitika>'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

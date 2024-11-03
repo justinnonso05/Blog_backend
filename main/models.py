@@ -76,3 +76,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content[:10]
+
+
+class Subscriber(models.Model):
+    email = models.EmailField()
+    date_subscribed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

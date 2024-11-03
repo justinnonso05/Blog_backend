@@ -2,10 +2,10 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-from .models import Blog, Comment
+from .models import Blog, Comment, Subscriber
 from django.db.models import Q
 from rest_framework import status, generics
-from .serializers import BlogSerializer, PaginatedBlogSerializer, CommentSerializer
+from .serializers import BlogSerializer, PaginatedBlogSerializer, CommentSerializer, SubscriberSerializer
 
 class CustomPagination(PageNumberPagination):
     page_size = 10
@@ -125,3 +125,8 @@ class CommentListView(APIView):
 
         # Return the response with serialized data
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+class SubscriberListCreate(generics.ListCreateAPIView):
+    queryset = Subscriber.objects.all()
+    serializer_class = SubscriberSerializer

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        /* Main email styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .email-content {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 500px; /* Adjust width as needed */
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .read-more:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h1 class="email-header">{{ blog.title }}</h1>
+        <p class="email-content">{{ sanitized_content }}</p>
+        <a href="{{ blog_url }}" class="read-more">Check out this post</a>
+    </div>
+</body>
+</html>

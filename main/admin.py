@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.models import User, Group
 from unfold.admin import ModelAdmin
-from .models import Blog, Comment
+from .models import Blog, Comment, Subscriber
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_summernote.admin import SummernoteModelAdmin
@@ -42,8 +42,11 @@ class BlogAdmin(ModelAdmin, SummernoteModelAdmin):  # instead of ModelAdmin
     
 class CommentAdmin(ModelAdmin):  # instead of ModelAdmin
     list_display = ('name', 'content')
-       
 
+class SubscriberAdmin(ModelAdmin):  # instead of ModelAdmin
+    list_display = ('email', 'date_subscribed')  
+
+admin.site.register(Subscriber, SubscriberAdmin)    
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Blog, BlogAdmin)
 

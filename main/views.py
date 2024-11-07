@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
+from django.http import Http404
+from django.shortcuts import get_object_or_404, render, redirect
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from .models import Blog, Comment, Subscriber
@@ -130,3 +131,14 @@ class CommentListView(APIView):
 class SubscriberListCreate(generics.ListCreateAPIView):
     queryset = Subscriber.objects.all()
     serializer_class = SubscriberSerializer
+
+
+def unsubscribe(request, token):
+    try:
+        # Look for the subscriber with the given token
+        subscriber = Subscriber.objects.get(unsubscribe_token=token)
+        subscriber.delete()  # Delete the subscriber from the database
+        return render(request, 'main/unsubscribe.html')  # Show confirmation page
+    except Subscriber.DoesNotExist:
+        # If token is invalid, raise a 404 error
+        raise Http404("Subscriber not found")

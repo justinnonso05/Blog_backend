@@ -7,16 +7,36 @@ from cloudinary.api import cloudinary
 from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
+import uuid
 # from django_summernote.fields import SummernoteTextField
 # from django_summernote.fields import SummernoteTextField
 
 
 class Blog(models.Model):
     CATEGORY_CHOICES = [
-        ('tech', 'Tech'),
-        ('lifestyle', 'Lifestyle'),
-        ('education', 'Education'),
-        ('health', 'Health'),
+        ('tech', 'Technology'),
+        ('business-finance', 'Business & Finance'),
+        ('digital-marketing', 'Digital Marketing'),
+        ('travel', 'Travel'),
+        ('fashion-beauty', 'Fashion & Beauty'),
+        ('health', 'Health & Wellness'),
+        ('education-learning', 'Education & Learning'),
+        ('art-entertainment', 'Art & entertainment'),
+        ('science-nature', 'Science & Nature'),
+        ('Personal-developmemnt', 'Personal Development'),
+        ('home-lifestyle', 'Home & lifestyle'),
+        ('news-politics', 'News & Politics'),
+        ('food-drink', 'Food & Drink'),
+        ('Hobbies-liesure', 'Hobbies & Leisure'),
+        ('Sports', 'Sports'),
+        ('parenting-family', 'Parenting & Family'),
+        ('automative', 'Automative'),
+        ('environment-sustainability', 'Environment & Sustainability'),
+        ('gaming', 'Gaming'),
+        ('spirituality-religion', 'Spirituality & Religion'),
+        ('real-estate', 'Real Estate'),
+        ('diy-crafts', 'DIY & Crafts'),
+        ('animal-pets', 'Animal & Pets'),
         # Add more categories as needed
     ]
 
@@ -78,9 +98,13 @@ class Comment(models.Model):
         return self.content[:10]
 
 
+# def generate_token():
+#     return uuid.uuid4().hex
+
 class Subscriber(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     date_subscribed = models.DateTimeField(auto_now_add=True)
+    unsubscribe_token = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return self.email

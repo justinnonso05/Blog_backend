@@ -14,31 +14,42 @@ def send_new_blog_email(sender, instance, created, **kwargs):
         from_email = settings.DEFAULT_FROM_EMAIL
         blog_url = f"https://blog-test-mauve-psi.vercel.app/pages/Blog/{instance.slug}"
         subscribers = Subscriber.objects.all()
-        emails = [subscriber.email for subscriber in subscribers]
 
-        for email in emails:
-            html_content = render_to_string('main/email.html', {'blog': instance, 'blog_url': blog_url})
+        for subscriber in subscribers:
+            # Generate unsubscribe URL for each subscriber
+            unsubscribe_url = f"localhost:8000/unsubscribe/{subscriber.unsubscribe_token}/"  # Adjust with your URL pattern
+
+            # Render HTML content with unsubscribe link and blog details
+            html_content = render_to_string('main/email.html', {
+                'blog': instance,
+                'blog_url': blog_url,
+                'subscriber': subscriber,
+                'unsubscribe': unsubscribe_url,
+            })
             plain_content = strip_tags(html_content)
-            
-            # Create the email
+
+            # Create and send the email
             email_message = EmailMultiAlternatives(
                 subject=subject,
                 body=plain_content,
                 from_email=from_email,
-                to=[email],
+                to=[subscriber.email],  # Send to individual subscriber's email
             )
             email_message.attach_alternative(html_content, "text/html")
-            email_message.send()  # Send each email individually with HTML content
+            email_message.send()
+
 
 @receiver(post_save, sender=Subscriber)
 def welcome_mail(sender, instance, created, **kwargs):
     if created:
-        print("hello, world!")
+        # print("hello, world!")
         subject = "Welcome to Lumen Blog"
         from_email = settings.DEFAULT_FROM_EMAIL
         email = instance.email
+        # base_url = request.build_absolute_uri('/')
+        unsubscribe_url = f"localhost:8000/unsubscribe/{instance.unsubscribe_token}"
 
-        html_content = render_to_string('main/welcome.html')
+        html_content = render_to_string('main/welcome.html', {'unsubscribe': unsubscribe_url})
         plain_content = strip_tags(html_content)
         
         # Create the email

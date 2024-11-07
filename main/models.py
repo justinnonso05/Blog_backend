@@ -8,8 +8,27 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 import uuid
+import re
+from django.core.exceptions import ValidationError
 # from django_summernote.fields import SummernoteTextField
 # from django_summernote.fields import SummernoteTextField
+
+def validate_no_emoji(value):
+    # Regular expression to match most emojis
+    emoji_pattern = re.compile(
+        "["
+        "\U0001F600-\U0001F64F"  # Emoticons
+        "\U0001F300-\U0001F5FF"  # Symbols & pictographs
+        "\U0001F680-\U0001F6FF"  # Transport & map symbols
+        "\U0001F1E0-\U0001F1FF"  # Flags (iOS)
+        "\U00002702-\U000027B0"  # Dingbats
+        "\U000024C2-\U0001F251"  # Enclosed characters
+        "]+",
+        flags=re.UNICODE,
+    )
+    if emoji_pattern.search(value):
+        raise ValidationError("Emojis are not allowed in this field.")
+
 
 
 class Blog(models.Model):
@@ -41,7 +60,7 @@ class Blog(models.Model):
     ]
 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, validators=[validate_no_emoji], help_text="No emojis allowed.")
     slug = models.SlugField(unique=True, blank=True, null=True, max_length=255)
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     title_image = CloudinaryField('image', folder="Blog/title/", default="https://res.cloudinary.com/dpyxbvcyl/image/upload/v1726002039/Blog/g2dpyp3jmtel9u2kgjvi.jpg")

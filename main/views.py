@@ -142,3 +142,9 @@ def unsubscribe(request, token):
     except Subscriber.DoesNotExist:
         # If token is invalid, raise a 404 error
         raise Http404("Subscriber not found")
+    
+
+class CategoryListView(APIView):
+    def get(self, request, *args, **kwargs):
+        categories = [{"key": key, "value": value} for key, value in Blog.CATEGORY_CHOICES]
+        return Response(categories, status=status.HTTP_200_OK)

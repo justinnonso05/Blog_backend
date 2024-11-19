@@ -43,3 +43,8 @@ class SubscriberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscriber
         fields = ['id', 'email', 'date_subscribed']
+
+
+class CategorySerializer(serializers.Serializer):
+    key = serializers.CharField()
+    value = serializers.CharField()

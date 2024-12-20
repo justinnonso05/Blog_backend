@@ -25,10 +25,29 @@ class BlogListCreateView(APIView):
     def get(self, request):
         paginator = CustomPagination()
         search_query = request.query_params.get('query', None)
-        queryset = Blog.objects.all().order_by('-date_posted')
-        if search_query:
-            queryset = queryset.filter(Q(title__icontains = search_query.lower()) | Q(category__icontains = search_query.upper()))
+        category_filter = request.query_params.get('category', None)
+        show_all = request.query_params.get('all', 'false').lower() == 'true'
 
+        # Get all blogs and filter by category if provided
+        queryset = Blog.objects.all().order_by('-date_posted')
+        if category_filter:
+            queryset = queryset.filter(category=category_filter)
+
+        # Apply search query filter if present
+        if search_query:
+            queryset = queryset.filter(Q(title__icontains=search_query.lower()) | Q(category__icontains=search_query.upper()))
+
+        # If 'all=true', return all filtered posts without pagination
+        if show_all:
+            serializer = BlogSerializer(queryset, many=True)
+            return Response({
+                'totalPosts': len(queryset),
+                'totalPages': 1,
+                'currentPage': 1,
+                'posts': serializer.data
+            })
+
+        # Default behavior with pagination
         page = paginator.paginate_queryset(queryset, request)
         serializer = BlogSerializer(page, many=True)
         paginated_serializer = PaginatedBlogSerializer({
@@ -38,6 +57,7 @@ class BlogListCreateView(APIView):
             'posts': serializer.data
         })
         return Response(paginated_serializer.data)
+
 
 
 class BlogDetailView(APIView):

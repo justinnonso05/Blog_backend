@@ -33,29 +33,13 @@ def validate_no_emoji(value):
 
 class Blog(models.Model):
     CATEGORY_CHOICES = [
-        ('tech', 'Technology'),
-        ('business-finance', 'Business & Finance'),
-        ('digital-marketing', 'Digital Marketing'),
-        ('travel', 'Travel'),
-        ('fashion-beauty', 'Fashion & Beauty'),
-        ('health', 'Health & Wellness'),
-        ('education-learning', 'Education & Learning'),
-        ('art-entertainment', 'Art & entertainment'),
-        ('science-nature', 'Science & Nature'),
-        ('Personal-developmemnt', 'Personal Development'),
-        ('home-lifestyle', 'Home & lifestyle'),
-        ('news-politics', 'News & Politics'),
-        ('food-drink', 'Food & Drink'),
-        ('Hobbies-liesure', 'Hobbies & Leisure'),
-        ('Sports', 'Sports'),
-        ('parenting-family', 'Parenting & Family'),
-        ('automative', 'Automative'),
-        ('environment-sustainability', 'Environment & Sustainability'),
-        ('gaming', 'Gaming'),
-        ('spirituality-religion', 'Spirituality & Religion'),
-        ('real-estate', 'Real Estate'),
-        ('diy-crafts', 'DIY & Crafts'),
-        ('animal-pets', 'Animal & Pets'),
+        ('entertainment', 'Entertainment'),
+        ('opinion_commentaries', 'Opinions & Commentaries'),
+        ('sports', 'Sports'),
+        ('news-report', 'News Reports'),
+        ('bizz_napss', 'BizzNAPSS'),
+        ('interviews', 'Interviews'),
+        ('articles_essays', 'Articles & Essays'),
         # Add more categories as needed
     ]
 

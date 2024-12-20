@@ -4,6 +4,7 @@ https://ifepolitika.pythonanywhere.com/api/blogs/ (GET)
 2. query( = title or category) <!-- search parameter -->
 3. format (json)
 4. page ( = page_num) <!-- get blogs on a particular page -->
+5. all = true <!-- show all blogs -->
 
 <!-- for blog details -->
 https://ifepolitika.pythonanywhere.com/api/blogs/details/ (GET)
@@ -17,5 +18,8 @@ https://ifepolitika.pythonanywhere.com/api/blogs/comments/ (POST and GET)
 
 <!-- To subscribe -->
 https://ifepolitika.pythonanywhere.com/api/blogs/subscribe/ (POST)
+
+
+https://ifepolitika.pythonanywhere.com/api/categories/ (GET)
 
 

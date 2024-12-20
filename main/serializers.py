@@ -6,9 +6,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']  # Adjust fields as necessary
+
 class BlogSerializer(serializers.ModelSerializer):
     author = UserSerializer()  # Use UserSerializer for nested representation
     title_image = serializers.SerializerMethodField()
+    category_display = serializers.SerializerMethodField()
 
     def get_title_image(self, obj):
         if isinstance(obj, dict):
@@ -25,7 +27,14 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['id', 'title', 'slug', 'category', 'title_image', 'content', 'author', 'date_posted']
+        fields = ['id', 'title', 'slug', 'category', 'category_display', 'title_image', 'content', 'author', 'date_posted']
+
+    def get_category_display(self, obj):
+        # Ensure obj is a Blog model instance, not a dictionary
+        if isinstance(obj, dict):
+            # If it's a dictionary, look up the display value from CATEGORY_CHOICES
+            return dict(Blog.CATEGORY_CHOICES).get(obj.get('category', ''), obj.get('category', ''))
+        return obj.get_category_display()
 
 class PaginatedBlogSerializer(serializers.Serializer):
     totalPosts = serializers.IntegerField()
